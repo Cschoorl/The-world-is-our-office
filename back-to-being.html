@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Back to Being — The World is our Office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #f4efe5;
+      --bg-soft: #ebe4d4;
+      --ink: #1a1714;
+      --ink-soft: #4a443c;
+      --ink-mute: #8a8278;
+      --line: rgba(26, 23, 20, 0.12);
+      --line-strong: rgba(26, 23, 20, 0.22);
+      --accent: #b85c38;
+      --accent-soft: rgba(184, 92, 56, 0.1);
+      --serif: "Fraunces", "Times New Roman", serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* subtle paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: radial-gradient(
+          circle at 20% 30%,
+          rgba(184, 92, 56, 0.04),
+          transparent 60%
+        ),
+        radial-gradient(
+          circle at 80% 70%,
+          rgba(26, 23, 20, 0.03),
+          transparent 50%
+        );
+    }
+
+    .deck {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(40px, 6vh, 80px) clamp(40px, 7vw, 120px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0.7s;
+      z-index: 2;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
+    }
+
+    .slide.active .stagger > * {
+      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+    .slide.active .stagger > *:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    .slide.active .stagger > *:nth-child(2) {
+      animation-delay: 0.22s;
+    }
+    .slide.active .stagger > *:nth-child(3) {
+      animation-delay: 0.34s;
+    }
+    .slide.active .stagger > *:nth-child(4) {
+      animation-delay: 0.46s;
+    }
+    .slide.active .stagger > *:nth-child(5) {
+      animation-delay: 0.58s;
+    }
+    .slide.active .stagger > *:nth-child(6) {
+      animation-delay: 0.7s;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* — header bar (section + brand) — */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+
+    .slide-header .section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-header .section .num {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .slide-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      position: relative;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 1100px;
+    }
+
+    /* — typography — */
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1.display {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    h1.display em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    h2.title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(40px, 5.4vw, 88px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+    h2.title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    h3.subtitle {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(28px, 3.2vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    p.lead {
+      font-family: var(--sans);
+      font-size: clamp(17px, 1.4vw, 22px);
+      line-height: 1.55;
+      color: var(--ink-soft);
+      max-width: 780px;
+      font-weight: 400;
+    }
+
+    p.lead + p.lead {
+      margin-top: 16px;
+    }
+
+    .footnote {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+
+    /* — slide footer — */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+
+    /* — cover slide — */
+    .cover .slide-body {
+      justify-content: center;
+      align-items: flex-start;
+      max-width: none;
+    }
+
+    .cover h1.display {
+      font-size: clamp(64px, 11vw, 180px);
+    }
+
+    .cover .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 40px;
+    }
+    .cover .tag::before {
+      content: "";
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .cover .meta {
+      margin-top: 56px;
+      display: flex;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+    .cover .meta div {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cover .meta span:first-child {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+    .cover .meta span:last-child {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    /* — stats row (slide 2) — */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      max-width: 900px;
+      border-top: 1px solid var(--line);
+    }
+    .stat {
+      padding: 32px 24px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat:not(:last-child) {
+      border-right: 1px solid var(--line);
+      padding-right: 32px;
+    }
+    .stat:not(:first-child) {
+      padding-left: 32px;
+    }
+    .stat .num {
+      font-family: var(--serif);
+      font-size: clamp(40px, 4.5vw, 64px);
+      font-weight: 400;
+      line-height: 1;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .stat .label {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
+
+    /* — slogan slide — */
+    .slogan h2 {
+      font-size: clamp(48px, 8vw, 132px);
+      line-height: 0.98;
+      font-weight: 300;
+      margin-bottom: 40px;
+    }
+    .slogan h2 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* — partner overview list — */
+    .partner-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: 24px;
+      border-top: 1px solid var(--line);
+      max-width: 1000px;
+    }
+    .partner-list .row {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+      transition: padding-left 0.4s ease;
+    }
+    .partner-list .row:hover {
+      padding-left: 12px;
+    }
+    .partner-list .row .idx {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .partner-list .row .name {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.2vw, 32px);
+      font-weight: 400;
+      color: var(--ink);
+    }
+    .partner-list .row .examples {
+      font-size: 13px;
+      color: var(--ink-mute);
+      letter-spacing: 0.05em;
+    }
+
+    /* — partner detail layout — */
+    .partner-detail .slide-body {
+      max-width: none;
+    }
+    .partner-detail h2.title {
+      max-width: 900px;
+    }
+
+    .partner-detail .examples-line {
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.06em;
+      margin-bottom: 56px;
+      max-width: 900px;
+      line-height: 1.5;
+    }
+    .partner-detail .examples-line strong {
+      color: var(--ink-soft);
+      font-weight: 500;
+      margin-right: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .ask-give {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-width: 1100px;
+      border-top: 1px solid var(--line);
+    }
+    .ask-give > div {
+      padding: 32px 40px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ask-give > div:first-child {
+      border-right: 1px solid var(--line);
+    }
+    .ask-give > div:last-child {
+      padding-left: 40px;
+      padding-right: 0;
+    }
+    .ask-give .label {
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ask-give .label::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .ask-give p {
+      font-family: var(--sans);
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    /* — closing pitch — */
+    .pitch h1.display {
+      font-size: clamp(56px, 8.5vw, 140px);
+    }
+    .pitch .lead {
+      font-size: clamp(20px, 1.7vw, 26px);
+      max-width: 820px;
+      margin-top: 36px;
+    }
+    .pitch .signoff {
+      margin-top: 64px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--serif);
+      font-size: 22px;
+      color: var(--ink);
+    }
+    .pitch .signoff::before {
+      content: "";
+      width: 60px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    /* — controls — */
+    .controls {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+      background: rgba(244, 239, 229, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 100px;
+    }
+
+    .controls button {
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-soft);
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      font-size: 18px;
+    }
+    .controls button:hover:not(:disabled) {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .controls button:active:not(:disabled) {
+      transform: scale(0.92);
+    }
+    .controls button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .controls .counter {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--ink-soft);
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      min-width: 60px;
+      text-align: center;
+    }
+    .controls .counter span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* — progress bar — */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: transparent;
+      z-index: 10;
+    }
+    .progress::after {
+      content: "";
+      display: block;
+      height: 100%;
+      width: var(--pct, 0%);
+      background: var(--accent);
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* — keyboard hint — */
+    .hint {
+      position: fixed;
+      bottom: 36px;
+      left: 28px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+    .hint:hover {
+      opacity: 1;
+    }
+    .hint kbd {
+      font-family: var(--sans);
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 3px 7px;
+      font-size: 10px;
+      color: var(--ink-soft);
+      letter-spacing: 0;
+    }
+
+    /* — responsive — */
+    @media (max-width: 720px) {
+      .slide {
+        padding: 32px 28px;
+      }
+      .ask-give,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      .ask-give > div:first-child {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 32px;
+        padding-right: 0;
+      }
+      .ask-give > div:last-child {
+        padding-left: 0;
+        padding-top: 32px;
+      }
+      .stat {
+        padding: 24px 0 !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--line);
+        padding-left: 0 !important;
+      }
+      .partner-list .row {
+        grid-template-columns: 40px 1fr;
+      }
+      .partner-list .row .examples {
+        display: none;
+      }
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <main class="deck" id="deck">
+    <!-- 01 — COVER -->
+    <section class="slide cover active" data-slide="1">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">·</span>
+          <span>Back to Being</span>
+        </div>
+        <div class="brand">
+          <span>Camino · 2026</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="tag">A campaign for MIND</span>
+        <h1 class="display">
+          The World<br />is our <em>Office.</em>
+        </h1>
+        <p class="lead" style="margin-top: 36px; max-width: 640px">
+          120 km lopen. 6 dagen bouwen met AI. Eén app voor mentale gezondheid —
+          gratis gedoneerd aan MIND.
+        </p>
+        <div class="meta">
+          <div>
+            <span>Afstand</span>
+            <span>120 km</span>
+          </div>
+          <div>
+            <span>Duur</span>
+            <span>6 dagen</span>
+          </div>
+          <div>
+            <span>Doel</span>
+            <span>MIND</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>01</span>
+      </div>
+    </section>
+
+    <!-- 02 — HOOFDCONCEPT -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">01</span>
+          <span>Hoofdconcept</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Het concept</span>
+        <h2 class="title">
+          120 km lopen.<br />
+          Onderweg <em>bouwen</em> met AI.
+        </h2>
+        <p class="lead">
+          Wij lopen in 6 dagen 120 km van de Camino voor MIND. Onderweg bouwen
+          we met AI een app voor mentale gezondheid, die we na afloop gratis
+          doneren aan MIND.
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="num">120</span>
+            <span class="label">Kilometer Camino</span>
+          </div>
+          <div class="stat">
+            <span class="num">6</span>
+            <span class="label">Dagen onderweg</span>
+          </div>
+          <div class="stat">
+            <span class="num">1</span>
+            <span class="label">App, gratis voor MIND</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>02</span>
+      </div>
+    </section>
+
+    <!-- 03 — CENTRALE SLOGAN -->
+    <section class="slide slogan" data-slide="3">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">02</span>
+          <span>Centrale slogan</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Onze manifest</span>
+        <h2>
+          The World is our <em>Office.</em>
+        </h2>
+        <p class="lead">
+          We bouwen niet vanuit een kantoor, maar onderweg — lopend, denkend,
+          reflecterend en creërend met AI, voice commands en smart glasses.
+        </p>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>03</span>
+      </div>
+    </section>
+
+    <!-- 04 — PARTNERSTRUCTUUR OVERVIEW -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Vijf categorieën</span>
+        <h2 class="title">
+          Vijf soorten partners.<br /><em>Eén verhaal.</em>
+        </h2>
+
+        <div class="partner-list">
+          <div class="row">
+            <span class="idx">01</span>
+            <span class="name">Software &amp; AI</span>
+            <span class="examples">Cursor · OpenAI · Lovable · WhisperFlow</span>
+          </div>
+          <div class="row">
+            <span class="idx">02</span>
+            <span class="name">Journey &amp; storytelling</span>
+            <span class="examples">Polarsteps</span>
+          </div>
+          <div class="row">
+            <span class="idx">03</span>
+            <span class="name">Food &amp; energy</span>
+            <span class="examples">Upfront</span>
+          </div>
+          <div class="row">
+            <span class="idx">04</span>
+            <span class="name">Sport &amp; outdoor</span>
+            <span class="examples">Hoka · Garmin · Polar · Patagonia</span>
+          </div>
+          <div class="row">
+            <span class="idx">05</span>
+            <span class="name">Impact &amp; startup</span>
+            <span class="examples">Norrsken · House of Founders · Nxchange</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>04</span>
+      </div>
+    </section>
+
+    <!-- 05 — SOFTWARE & AI -->
+    <section class="slide partner-detail" data-slide="5">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur · 1 / 5</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Categorie 01</span>
+        <h2 class="title">Software &amp; <em>AI-partners.</em></h2>
+        <p class="examples-line">
+          <strong>Voorbeelden</strong>
+          Cursor · OpenAI / Codex · Lovable · Manus · WhisperFlow
+        </p>
+
+        <div class="ask-give">
+          <div>
+            <span class="label">De vraag</span>
+            <p>
+              Gratis credits, tool access, technische support en/of een
+              financiële bijdrage om onze build onderweg mogelijk te maken.
+            </p>
+          </div>
+          <div>
+            <span class="label">Wat ze terugkrijgen</span>
+            <p>
+              Zichtbaarheid in de aftermovie, social posts, use cases en content
+              waarin we laten zien hoe we hun tools onderweg gebruiken.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>05</span>
+      </div>
+    </section>
+
+    <!-- 06 — JOURNEY & STORYTELLING -->
+    <section class="slide partner-detail" data-slide="6">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur · 2 / 5</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Categorie 02</span>
+        <h2 class="title">Journey &amp; <em>storytelling.</em></h2>
+        <p class="examples-line">
+          <strong>Voorbeelden</strong>
+          Polarsteps
+        </p>
+
+        <div class="ask-give">
+          <div>
+            <span class="label">De vraag</span>
+            <p>
+              Platformondersteuning, promotie, sponsoring of een gezamenlijke
+              campagne rondom onze reis.
+            </p>
+          </div>
+          <div>
+            <span class="label">Wat ze terugkrijgen</span>
+            <p>
+              De volledige route, dagelijkse updates, reflecties en het verhaal
+              — zichtbaar via hun platform.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>06</span>
+      </div>
+    </section>
+
+    <!-- 07 — FOOD & ENERGY -->
+    <section class="slide partner-detail" data-slide="7">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur · 3 / 5</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Categorie 03</span>
+        <h2 class="title">Food &amp; <em>energy.</em></h2>
+        <p class="examples-line">
+          <strong>Voorbeelden</strong>
+          Upfront
+        </p>
+
+        <div class="ask-give">
+          <div>
+            <span class="label">De vraag</span>
+            <p>
+              Voeding, producten voor onderweg en/of sponsoring om onze
+              fysieke uitdaging vol te houden.
+            </p>
+          </div>
+          <div>
+            <span class="label">Wat ze terugkrijgen</span>
+            <p>
+              Exposure rond energie, gezondheid, eerlijk eten en presteren
+              tijdens een fysieke en mentale challenge.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>07</span>
+      </div>
+    </section>
+
+    <!-- 08 — SPORT & OUTDOOR -->
+    <section class="slide partner-detail" data-slide="8">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur · 4 / 5</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Categorie 04</span>
+        <h2 class="title">Sport &amp; <em>outdoor.</em></h2>
+        <p class="examples-line">
+          <strong>Voorbeelden</strong>
+          Hoka · Garmin · Polar · ASICS · Patagonia · The North Face
+        </p>
+
+        <div class="ask-give">
+          <div>
+            <span class="label">De vraag</span>
+            <p>
+              Schoenen, gear, kleding, wearables of financiële steun om
+              optimaal voorbereid op pad te gaan.
+            </p>
+          </div>
+          <div>
+            <span class="label">Wat ze terugkrijgen</span>
+            <p>
+              Zichtbaarheid in content over beweging, uithoudingsvermogen,
+              mentale gezondheid en avontuur.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>08</span>
+      </div>
+    </section>
+
+    <!-- 09 — IMPACT & STARTUP -->
+    <section class="slide partner-detail" data-slide="9">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">03</span>
+          <span>Partnerstructuur · 5 / 5</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Categorie 05</span>
+        <h2 class="title">Impact &amp; <em>startup.</em></h2>
+        <p class="examples-line">
+          <strong>Voorbeelden</strong>
+          Norrsken · House of Founders · Nxchange
+        </p>
+
+        <div class="ask-give">
+          <div>
+            <span class="label">De vraag</span>
+            <p>
+              Sponsoring, netwerk, introducties en strategische hulp om dit
+              project naar het volgende niveau te tillen.
+            </p>
+          </div>
+          <div>
+            <span class="label">Wat ze terugkrijgen</span>
+            <p>
+              Koppeling aan een maatschappelijk AI-project waarin impact,
+              ondernemerschap en mentale gezondheid samenkomen.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>09</span>
+      </div>
+    </section>
+
+    <!-- 10 — PARTNERBELOFTE -->
+    <section class="slide" data-slide="10">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">04</span>
+          <span>Partnerbelofte</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">Onze belofte</span>
+        <h2 class="title">
+          Geen losse logo's.<br />
+          <em>Onderdeel van het verhaal.</em>
+        </h2>
+        <p class="lead">
+          Partners worden geen losse logo's, maar onderdeel van het verhaal.
+        </p>
+        <p class="lead">
+          Ze krijgen zichtbaarheid via social media, behind-the-scenes content,
+          posts tijdens de reis, een professionele aftermovie en concrete
+          voorbeelden van hoe hun merk of tool bijdraagt aan Back to Being.
+        </p>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>10</span>
+      </div>
+    </section>
+
+    <!-- 11 — KERNPITCH -->
+    <section class="slide pitch" data-slide="11">
+      <div class="slide-header">
+        <div class="section">
+          <span class="num">05</span>
+          <span>Kernpitch</span>
+        </div>
+        <div class="brand">
+          <span>Back to Being</span>
+          <span class="brand-mark"></span>
+        </div>
+      </div>
+
+      <div class="slide-body stagger">
+        <span class="eyebrow">In één zin</span>
+        <h1 class="display">
+          Back to Being —<br />
+          The World is our <em>Office.</em>
+        </h1>
+        <p class="lead">
+          Een 120 km Camino-campagne waarin we wandelen, bouwen en laten zien
+          hoe AI ons kan helpen om menselijker te werken en te leven.
+        </p>
+        <div class="signoff">Laten we samen lopen.</div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Back to Being · The World is our Office</span>
+        <span>11</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="hint">
+    <kbd>←</kbd><kbd>→</kbd>
+    <span>navigeer</span>
+  </div>
+
+  <nav class="controls" role="navigation" aria-label="Slide navigation">
+    <button class="prev" aria-label="Vorige slide">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <div class="counter"><span id="cur">01</span> / <span id="total">11</span></div>
+    <button class="next" aria-label="Volgende slide">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </button>
+  </nav>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const total = slides.length;
+      const prevBtn = document.querySelector(".controls .prev");
+      const nextBtn = document.querySelector(".controls .next");
+      const curEl = document.getElementById("cur");
+      const totalEl = document.getElementById("total");
+      const progress = document.getElementById("progress");
+      let index = 0;
+
+      totalEl.textContent = String(total).padStart(2, "0");
+
+      function go(i) {
+        if (i < 0 || i >= total || i === index) return;
+        slides[index].classList.remove("active");
+        index = i;
+        slides[index].classList.add("active");
+        curEl.textContent = String(index + 1).padStart(2, "0");
+        progress.style.setProperty(
+          "--pct",
+          ((index + 1) / total) * 100 + "%"
+        );
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === total - 1;
+      }
+
+      function next() {
+        go(Math.min(index + 1, total - 1));
+      }
+      function prev() {
+        go(Math.max(index - 1, 0));
+      }
+
+      prevBtn.addEventListener("click", prev);
+      nextBtn.addEventListener("click", next);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+          e.preventDefault();
+          next();
+        } else if (
+          e.key === "ArrowLeft" ||
+          e.key === "PageUp" ||
+          e.key === "Backspace"
+        ) {
+          e.preventDefault();
+          prev();
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          go(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          go(total - 1);
+        } else if (/^[1-9]$/.test(e.key)) {
+          const n = parseInt(e.key, 10) - 1;
+          if (n < total) go(n);
+        }
+      });
+
+      // touch swipe
+      let touchStartX = 0;
+      let touchStartY = 0;
+      document.addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        },
+        { passive: true }
+      );
+      document.addEventListener(
+        "touchend",
+        (e) => {
+          const dx = e.changedTouches[0].clientX - touchStartX;
+          const dy = e.changedTouches[0].clientY - touchStartY;
+          if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+            if (dx < 0) next();
+            else prev();
+          }
+        },
+        { passive: true }
+      );
+
+      // init
+      go(0);
+    })();
+  </script>
+</body>
+</html>
